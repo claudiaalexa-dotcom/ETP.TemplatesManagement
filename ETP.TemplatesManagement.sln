@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETP.TemplatesManagement.Data", "ETP.TemplatesManagement.Data\ETP.TemplatesManagement.Data.csproj", "{53626174-9488-4545-9FF1-74D2CEC3B830}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETP.TemplatesManagement.RA", "ETP.TemplatesManagement.RA\ETP.TemplatesManagement.RA.csproj", "{D6B19853-F6CD-4DAA-A3F7-963E9E77797A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETP.TemplatesManagement.SDK", "ETP.TemplatesManagement.SDK\ETP.TemplatesManagement.SDK.csproj", "{9A21E137-379E-4B1F-B63D-E68A0D60C0C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETP.TemplatesManagement.Tests", "ETP.TemplatesManagement.Tests\ETP.TemplatesManagement.Tests.csproj", "{0BE8F394-A187-471B-BD78-F3396F10453C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETP.TemplatesManagement.ServiceHost", "ETP.TemplatesManagement.ServiceHost\ETP.TemplatesManagement.ServiceHost.csproj", "{4C0CEC9A-27B3-49BA-A049-83A39130EA38}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{53626174-9488-4545-9FF1-74D2CEC3B830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53626174-9488-4545-9FF1-74D2CEC3B830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53626174-9488-4545-9FF1-74D2CEC3B830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53626174-9488-4545-9FF1-74D2CEC3B830}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6B19853-F6CD-4DAA-A3F7-963E9E77797A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6B19853-F6CD-4DAA-A3F7-963E9E77797A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6B19853-F6CD-4DAA-A3F7-963E9E77797A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6B19853-F6CD-4DAA-A3F7-963E9E77797A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A21E137-379E-4B1F-B63D-E68A0D60C0C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A21E137-379E-4B1F-B63D-E68A0D60C0C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A21E137-379E-4B1F-B63D-E68A0D60C0C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A21E137-379E-4B1F-B63D-E68A0D60C0C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BE8F394-A187-471B-BD78-F3396F10453C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BE8F394-A187-471B-BD78-F3396F10453C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BE8F394-A187-471B-BD78-F3396F10453C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BE8F394-A187-471B-BD78-F3396F10453C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C0CEC9A-27B3-49BA-A049-83A39130EA38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C0CEC9A-27B3-49BA-A049-83A39130EA38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C0CEC9A-27B3-49BA-A049-83A39130EA38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C0CEC9A-27B3-49BA-A049-83A39130EA38}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EF160D91-F8B8-4BC9-A423-52FD567EB3E2}
+	EndGlobalSection
+EndGlobal

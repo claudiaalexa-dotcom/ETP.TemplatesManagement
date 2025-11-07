@@ -1,0 +1,6 @@
+@ETP.TemplatesManagement.ServiceHost_HostAddress = http://localhost:5084
+
+GET {{ETP.TemplatesManagement.ServiceHost_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
