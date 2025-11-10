@@ -6,7 +6,8 @@ namespace ETP.TemplatesManagement.ServiceHost.Mappers
     {
         public AttributeMapper()
         {
-            CreateMap<Data.Models.Attribute, SDK.DTOs.Attribute>().ReverseMap();
+            CreateMap<Data.Models.Attribute, SDK.DTOs.Attribute>()
+                .ReverseMap();
         }
     }
 }

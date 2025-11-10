@@ -27,9 +27,9 @@ namespace ETP.TemplatesManagement.ServiceHost.Services
         }
 
         [HttpPost("get-by-anchor-point", Name = "GetTemplateByAnchorPoint")]
-        public async Task<IActionResult> GetByAnchorPoint([FromBody] AnchorPoint anchorPoint, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetByAnchorPoint([FromBody] AnchorPointSearchOptions searchOptions, CancellationToken cancellationToken)
         {
-            var template = await mediator.Send(new GetTemplateByAnchorPointQuery() { AnchorPoint = anchorPoint }, cancellationToken);
+            var template = await mediator.Send(new GetTemplatesByAnchorPointQuery() { SearchOptions = searchOptions }, cancellationToken);
             return Ok(template);
         }
 

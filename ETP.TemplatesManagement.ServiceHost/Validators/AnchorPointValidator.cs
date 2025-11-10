@@ -7,22 +7,22 @@ namespace ETP.TemplatesManagement.ServiceHost.Validators
     {
         public AnchorPointValidator()
         {
-            RuleFor(x => x.DeliveryOwner.Id)
+            RuleFor(x => x.DeliveryOwnerId)
                 .Must(id => id != Guid.Empty).WithMessage("AnchorPoint Delivery Owner Id cannot be empty.");
 
-            RuleFor(x => x.ServiceLine.Id)
+            RuleFor(x => x.ServiceLineId)
                 .Must(id => id != Guid.Empty).WithMessage("AnchorPoint Service Line Id cannot be empty.");
 
-            RuleFor(x => x.MarketOffering.Id)
+            RuleFor(x => x.MarketOfferingId)
                 .Must(id => id != Guid.Empty).WithMessage("AnchorPoint Market Offering Id cannot be empty.");
 
-            RuleFor(x => x.DeliveryOwner.Name)
+            RuleFor(x => x.DeliveryOwnerName)
                 .NotEmpty().WithMessage("AnchorPoint Delivery Owner Name cannot be empty.");
 
-            RuleFor(x => x.ServiceLine.Name)
+            RuleFor(x => x.ServiceLineName)
                 .NotEmpty().WithMessage("AnchorPoint Service Line Name cannot be empty.");
 
-            RuleFor(x => x.MarketOffering.Name)
+            RuleFor(x => x.MarketOfferingName)
                 .NotEmpty().WithMessage("AnchorPoint Market Offering Name cannot be empty.");
         }
     }

@@ -1,15 +1,14 @@
 ﻿namespace ETP.TemplatesManagement.Data.Models
 {
-    public record DeliveryOwner(Guid Id, string Name);
-
-    public record ServiceLine(Guid Id, string Name);
-
-    public record MarketOffering(Guid Id, string Name);
-
     public record AnchorPoint
     {
-        public DeliveryOwner DeliveryOwner { get; init; } = new DeliveryOwner(Guid.Empty, string.Empty);
-        public ServiceLine ServiceLine { get; init; } = new ServiceLine(Guid.Empty, string.Empty);
-        public MarketOffering MarketOffering { get; init; } = new MarketOffering(Guid.Empty, string.Empty);
+        public Guid DeliveryOwnerId { get; init; }
+        public string DeliveryOwnerName { get; init; } = string.Empty;
+
+        public Guid ServiceLineId { get; init; }
+        public string ServiceLineName { get; init; } = string.Empty;
+
+        public Guid MarketOfferingId { get; init; }
+        public string MarketOfferingName { get; init; } = string.Empty;
     }
 }

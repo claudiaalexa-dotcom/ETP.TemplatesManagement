@@ -15,9 +15,12 @@ namespace ETP.TemplatesManagement.Tests.ValidationTests
         private AnchorPoint CreateValid() =>
             new AnchorPoint
             {
-                DeliveryOwner = new DeliveryOwner(Guid.NewGuid(), "DO"),
-                ServiceLine = new ServiceLine(Guid.NewGuid(), "SL"),
-                MarketOffering = new MarketOffering(Guid.NewGuid(), "MO")
+                DeliveryOwnerId = Guid.NewGuid(),
+                DeliveryOwnerName = "do",
+                ServiceLineId = Guid.NewGuid(),
+                ServiceLineName = "sl",
+                MarketOfferingId = Guid.NewGuid(),
+                MarketOfferingName = "mo"
             };
 
         [Test]
@@ -30,10 +33,10 @@ namespace ETP.TemplatesManagement.Tests.ValidationTests
         [Test]
         public void EmptyDeliveryOwnerId_FailsWithExpectedMessage()
         {
-            var ap = CreateValid();
-            ap = ap with { DeliveryOwner = new DeliveryOwner(Guid.Empty, ap.DeliveryOwner.Name) };
+            var anchorPoint = CreateValid();
+            anchorPoint = anchorPoint with { DeliveryOwnerId = Guid.Empty };
 
-            var result = _validator.Validate(ap);
+            var result = _validator.Validate(anchorPoint);
             Assert.That(!result.IsValid);
             Assert.That(result.Errors.Select(e => e.ErrorMessage), Has.Member("AnchorPoint Delivery Owner Id cannot be empty."));
         }
@@ -41,10 +44,10 @@ namespace ETP.TemplatesManagement.Tests.ValidationTests
         [Test]
         public void EmptyServiceLineId_FailsWithExpectedMessage()
         {
-            var ap = CreateValid();
-            ap = ap with { ServiceLine = new ServiceLine(Guid.Empty, ap.ServiceLine.Name) };
+            var anchorPoint = CreateValid();
+            anchorPoint = anchorPoint with { ServiceLineId = Guid.Empty };
 
-            var result = _validator.Validate(ap);
+            var result = _validator.Validate(anchorPoint);
             Assert.That(!result.IsValid);
             Assert.That(result.Errors.Select(e => e.ErrorMessage), Has.Member("AnchorPoint Service Line Id cannot be empty."));
         }
@@ -52,10 +55,10 @@ namespace ETP.TemplatesManagement.Tests.ValidationTests
         [Test]
         public void EmptyMarketOfferingId_FailsWithExpectedMessage()
         {
-            var ap = CreateValid();
-            ap = ap with { MarketOffering = new MarketOffering(Guid.Empty, ap.MarketOffering.Name) };
+            var anchorPoint = CreateValid();
+            anchorPoint = anchorPoint with { MarketOfferingId = Guid.Empty };
 
-            var result = _validator.Validate(ap);
+            var result = _validator.Validate(anchorPoint);
             Assert.That(!result.IsValid);
             Assert.That(result.Errors.Select(e => e.ErrorMessage), Has.Member("AnchorPoint Market Offering Id cannot be empty."));
         }
@@ -63,10 +66,10 @@ namespace ETP.TemplatesManagement.Tests.ValidationTests
         [Test]
         public void EmptyDeliveryOwnerName_FailsWithExpectedMessage()
         {
-            var ap = CreateValid();
-            ap = ap with { DeliveryOwner = new DeliveryOwner(ap.DeliveryOwner.Id, string.Empty) };
+            var anchorPoint = CreateValid();
+            anchorPoint = anchorPoint with { DeliveryOwnerName = string.Empty };
 
-            var result = _validator.Validate(ap);
+            var result = _validator.Validate(anchorPoint);
             Assert.That(!result.IsValid);
             Assert.That(result.Errors.Select(e => e.ErrorMessage), Has.Member("AnchorPoint Delivery Owner Name cannot be empty."));
         }
@@ -74,10 +77,10 @@ namespace ETP.TemplatesManagement.Tests.ValidationTests
         [Test]
         public void EmptyServiceLineName_FailsWithExpectedMessage()
         {
-            var ap = CreateValid();
-            ap = ap with { ServiceLine = new ServiceLine(ap.ServiceLine.Id, string.Empty) };
+            var anchorPoint = CreateValid();
+            anchorPoint = anchorPoint with { ServiceLineName = string.Empty };
 
-            var result = _validator.Validate(ap);
+            var result = _validator.Validate(anchorPoint);
             Assert.That(!result.IsValid);
             Assert.That(result.Errors.Select(e => e.ErrorMessage), Has.Member("AnchorPoint Service Line Name cannot be empty."));
         }
@@ -85,10 +88,10 @@ namespace ETP.TemplatesManagement.Tests.ValidationTests
         [Test]
         public void EmptyMarketOfferingName_FailsWithExpectedMessage()
         {
-            var ap = CreateValid();
-            ap = ap with { MarketOffering = new MarketOffering(ap.MarketOffering.Id, string.Empty) };
+            var anchorPoint = CreateValid();
+            anchorPoint = anchorPoint with { MarketOfferingName = string.Empty };
 
-            var result = _validator.Validate(ap);
+            var result = _validator.Validate(anchorPoint);
             Assert.That(!result.IsValid);
             Assert.That(result.Errors.Select(e => e.ErrorMessage), Has.Member("AnchorPoint Market Offering Name cannot be empty."));
         }
