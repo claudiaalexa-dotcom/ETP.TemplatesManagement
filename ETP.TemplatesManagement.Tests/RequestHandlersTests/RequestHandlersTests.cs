@@ -108,6 +108,25 @@ namespace ETP.TemplatesManagement.Tests.RequestHandlerTests
         }
 
         [Test]
+        public void GetTemplateByIdHandler_ThrowsWhenNotFound()
+        {
+            var repoMock = new Mock<ITemplateRepository>();
+            var mapperMock = new Mock<IMapper>();
+
+            var id = Guid.NewGuid();
+            
+            repoMock.Setup(r => r.GetTemplateById(id, It.IsAny<CancellationToken>())).ReturnsAsync((Data.Models.Template?)null);
+            
+            var handler = new GetTemplateByIdHandler(repoMock.Object, mapperMock.Object);
+
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await handler.Handle(new GetTemplateByIdQuery { Id = id }, CancellationToken.None));
+            Assert.That(ex!.Message, Is.EqualTo($"Template with Id {id} not found."));
+
+            repoMock.Verify(r => r.GetTemplateById(id, It.IsAny<CancellationToken>()), Times.Once);
+            mapperMock.Verify(m => m.Map<SDK.DTOs.Template>(It.IsAny<SDK.DTOs.Template>()), Times.Never);
+        }
+
+        [Test]
         public async Task GetTemplatesHandler_MapsSearchOptionsAndReturnsMappedList()
         {
             var repoMock = new Mock<ITemplateRepository>();
