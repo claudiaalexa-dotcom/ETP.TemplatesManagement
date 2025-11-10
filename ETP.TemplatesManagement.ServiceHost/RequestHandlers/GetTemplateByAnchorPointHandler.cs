@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
 {
-    public class GetTemplateByAnchorPointHandler: IRequestHandler<GetTemplateByAnchorPointQuery, Template?>
+    public class GetTemplateByAnchorPointHandler: IRequestHandler<GetTemplateByAnchorPointQuery, Template>
     {
         private readonly ITemplateRepository _templateRepository;
         private readonly IMapper mapper;
@@ -17,11 +17,16 @@ namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
             this.mapper = mapper;
         }
 
-        public async Task<Template?> Handle(GetTemplateByAnchorPointQuery request, CancellationToken cancellationToken)
+        public async Task<Template> Handle(GetTemplateByAnchorPointQuery request, CancellationToken cancellationToken)
         {
             var model = mapper.Map<Data.Models.AnchorPoint>(request.AnchorPoint);
             var result = await _templateRepository.GetTemplateByAnchorPoint(model, cancellationToken);
-            return mapper.Map<Template?>(result);
+            if (result == null)
+            {
+                throw new KeyNotFoundException($"Template not found for anchor point {request.AnchorPoint}.");
+            }
+            
+            return mapper.Map<Template>(result);
         }
     }
 }
