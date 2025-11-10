@@ -19,9 +19,12 @@ namespace ETP.TemplatesManagement.Tests.ValidationTests
             {
                 AnchorPoint = new AnchorPoint
                 {
-                    DeliveryOwner = new DeliveryOwner(Guid.NewGuid(), "DO"),
-                    ServiceLine = new ServiceLine(Guid.NewGuid(), "SL"),
-                    MarketOffering = new MarketOffering(Guid.NewGuid(), "MO")
+                    DeliveryOwnerId = Guid.NewGuid(),
+                    DeliveryOwnerName = "do",
+                    ServiceLineId = Guid.NewGuid(),
+                    ServiceLineName = "sl",
+                    MarketOfferingId = Guid.NewGuid(),
+                    MarketOfferingName = "mo"
                 },
                 Title = "Valid Title",
                 Attributes = new List<SDK.DTOs.Attribute>

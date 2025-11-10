@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using ETP.TemplatesManagement.RA.Repositories;
-using ETP.TemplatesManagement.SDK.DTOs;
 using ETP.TemplatesManagement.ServiceHost.Commands;
 using ETP.TemplatesManagement.ServiceHost.Queries;
 using ETP.TemplatesManagement.ServiceHost.RequestHandlers;
 using Moq;
-using NUnit.Framework;
 
 namespace ETP.TemplatesManagement.Tests.RequestHandlerTests
 {
@@ -22,13 +20,13 @@ namespace ETP.TemplatesManagement.Tests.RequestHandlerTests
             var createdModel = new Data.Models.Template { Id = Guid.NewGuid() }; // model returned by repository
             var expectedDto = new SDK.DTOs.Template { Id = createdModel.Id }; // DTO expected to be returned
 
-            mapperMock.Setup(m => m.Map<Data.Models.Template>(It.IsAny<TemplateBase>())).Returns(mappedModel);
+            mapperMock.Setup(m => m.Map<Data.Models.Template>(It.IsAny<SDK.DTOs.TemplateBase>())).Returns(mappedModel);
             repoMock.Setup(r => r.CreateTemplate(mappedModel, It.IsAny<CancellationToken>())).ReturnsAsync(createdModel);
             mapperMock.Setup(m => m.Map<SDK.DTOs.Template>(createdModel)).Returns(expectedDto);
 
             var handler = new CreateTemplateHandler(repoMock.Object, mapperMock.Object);
 
-            var request = new CreateTemplateCommand { Template = new TemplateBase { Title = "title" } };
+            var request = new CreateTemplateCommand { Template = new SDK.DTOs.TemplateBase { Title = "title" } };
             var result = await handler.Handle(request, CancellationToken.None);
 
             Assert.That(expectedDto == result);
@@ -38,7 +36,7 @@ namespace ETP.TemplatesManagement.Tests.RequestHandlerTests
         }
 
         [Test]
-        public async Task DeleteTemplateHandler_ForwardsRepositoryResult()
+        public async Task DeleteTemplateHandler_ThrowsWhenNotFound()
         {
             var repoMock = new Mock<ITemplateRepository>();
             var id = Guid.NewGuid();
@@ -46,41 +44,45 @@ namespace ETP.TemplatesManagement.Tests.RequestHandlerTests
 
             var handler = new DeleteTemplateHandler(repoMock.Object);
 
-            var result = await handler.Handle(new DeleteTemplateCommand { Id = id }, CancellationToken.None);
-
-            Assert.That(result == false);
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await handler.Handle(new DeleteTemplateCommand { Id = id }, CancellationToken.None));
+            Assert.That(ex!.Message, Is.EqualTo($"Template with Id {id} not found."));
+            
             repoMock.Verify(r => r.DeleteTemplate(id, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
-        public async Task GetTemplateByAnchorPointHandler_MapsAnchorPointAndReturnsMappedTemplate()
+        public async Task GetTemplatesByAnchorPointHandler_MapsAnchorPointSearchOptionsAndReturnsMappedTemplate()
         {
             var repoMock = new Mock<ITemplateRepository>();
             var mapperMock = new Mock<IMapper>();
 
-            var sdkAnchor = new SDK.DTOs.AnchorPoint()
+            var sdkAnchor = new SDK.DTOs.AnchorPointSearchOptions()
             {
-                DeliveryOwner = new SDK.DTOs.DeliveryOwner(Guid.NewGuid(), "do"),
-                ServiceLine = new SDK.DTOs.ServiceLine(Guid.NewGuid(), "sl"),
-                MarketOffering = new SDK.DTOs.MarketOffering(Guid.NewGuid(), "mo")
+                DeliveryOwnerIds = [Guid.NewGuid()], 
+                DeliveryOwnerNames = ["do"],
+                ServiceLineIds = [Guid.NewGuid()],
+                ServiceLineNames = ["sl"],
+                MarketOfferingIds = [Guid.NewGuid()],
+                MarketOfferingNames = ["mo"]
             };
-            var dataAnchor = new Data.Models.AnchorPoint();
-            var dataTemplate = new Data.Models.Template { Id = Guid.NewGuid() };
-            var expectedDto = new SDK.DTOs.Template { Id = dataTemplate.Id };
 
-            mapperMock.Setup(m => m.Map<Data.Models.AnchorPoint>(It.IsAny<SDK.DTOs.AnchorPoint>())).Returns(dataAnchor);
-            repoMock.Setup(r => r.GetTemplateByAnchorPoint(dataAnchor, It.IsAny<CancellationToken>())).ReturnsAsync(dataTemplate);
-            mapperMock.Setup(m => m.Map<SDK.DTOs.Template>(dataTemplate)).Returns(expectedDto);
+            var dataAnchor = new Data.Models.AnchorPointSearchOptions();
+            var dataTemplates = new List<Data.Models.Template> { new Data.Models.Template { Id = Guid.NewGuid() } };
+            var expectedDtos = new List<SDK.DTOs.Template> { new SDK.DTOs.Template { Id = dataTemplates.First().Id } };
 
-            var handler = new GetTemplateByAnchorPointHandler(repoMock.Object, mapperMock.Object);
+            mapperMock.Setup(m => m.Map<Data.Models.AnchorPointSearchOptions>(It.IsAny<SDK.DTOs.AnchorPointSearchOptions>())).Returns(dataAnchor);
+            repoMock.Setup(r => r.GetTemplatesByAnchorPoint(dataAnchor, It.IsAny<CancellationToken>())).ReturnsAsync(dataTemplates);
+            mapperMock.Setup(m => m.Map<List<SDK.DTOs.Template>>(dataTemplates)).Returns(expectedDtos);
 
-            var query = new GetTemplateByAnchorPointQuery { AnchorPoint = sdkAnchor };
+            var handler = new GetTemplatesByAnchorPointHandler(repoMock.Object, mapperMock.Object);
+
+            var query = new GetTemplatesByAnchorPointQuery { SearchOptions = sdkAnchor };
             var result = await handler.Handle(query, CancellationToken.None);
 
-            Assert.That(expectedDto == result);
-            mapperMock.Verify(m => m.Map<Data.Models.AnchorPoint>(sdkAnchor), Times.Once);
-            repoMock.Verify(r => r.GetTemplateByAnchorPoint(dataAnchor, It.IsAny<CancellationToken>()), Times.Once);
-            mapperMock.Verify(m => m.Map<SDK.DTOs.Template>(dataTemplate), Times.Once);
+            Assert.That(expectedDtos == result);
+            mapperMock.Verify(m => m.Map<Data.Models.AnchorPointSearchOptions>(sdkAnchor), Times.Once);
+            repoMock.Verify(r => r.GetTemplatesByAnchorPoint(dataAnchor, It.IsAny<CancellationToken>()), Times.Once);
+            mapperMock.Verify(m => m.Map<List<SDK.DTOs.Template>>(dataTemplates), Times.Once);
         }
 
         [Test]
@@ -103,6 +105,25 @@ namespace ETP.TemplatesManagement.Tests.RequestHandlerTests
             Assert.That(expectedDto == result);
             repoMock.Verify(r => r.GetTemplateById(id, It.IsAny<CancellationToken>()), Times.Once);
             mapperMock.Verify(m => m.Map<SDK.DTOs.Template>(dataTemplate), Times.Once);
+        }
+
+        [Test]
+        public void GetTemplateByIdHandler_ThrowsWhenNotFound()
+        {
+            var repoMock = new Mock<ITemplateRepository>();
+            var mapperMock = new Mock<IMapper>();
+
+            var id = Guid.NewGuid();
+            
+            repoMock.Setup(r => r.GetTemplateById(id, It.IsAny<CancellationToken>())).ReturnsAsync((Data.Models.Template?)null);
+            
+            var handler = new GetTemplateByIdHandler(repoMock.Object, mapperMock.Object);
+
+            var ex = Assert.ThrowsAsync<KeyNotFoundException>(async () => await handler.Handle(new GetTemplateByIdQuery { Id = id }, CancellationToken.None));
+            Assert.That(ex!.Message, Is.EqualTo($"Template with Id {id} not found."));
+
+            repoMock.Verify(r => r.GetTemplateById(id, It.IsAny<CancellationToken>()), Times.Once);
+            mapperMock.Verify(m => m.Map<SDK.DTOs.Template>(It.IsAny<SDK.DTOs.Template>()), Times.Never);
         }
 
         [Test]
@@ -139,7 +160,7 @@ namespace ETP.TemplatesManagement.Tests.RequestHandlerTests
             var mapperMock = new Mock<IMapper>();
 
             var id = Guid.NewGuid();
-            var sdkTemplateBase = new TemplateBase { Title = "t" };
+            var sdkTemplateBase = new SDK.DTOs.TemplateBase { Title = "t" };
             var mappedModel = new Data.Models.Template(); // mapper returns this for mapping from TemplateBase
             var updatedDataModel = new Data.Models.Template { Id = id };
             var expectedDto = new SDK.DTOs.Template { Id = id };

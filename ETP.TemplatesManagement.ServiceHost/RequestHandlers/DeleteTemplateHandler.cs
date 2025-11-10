@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
 {
-    public class DeleteTemplateHandler: IRequestHandler<DeleteTemplateCommand, bool>
+    public class DeleteTemplateHandler: IRequestHandler<DeleteTemplateCommand>
     {
         private readonly ITemplateRepository _templateRepository;
 
@@ -13,9 +13,13 @@ namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
             _templateRepository = templateRepository;
         }
 
-        public async Task<bool> Handle(DeleteTemplateCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteTemplateCommand request, CancellationToken cancellationToken)
         {
-            return await _templateRepository.DeleteTemplate(request.Id, cancellationToken);
+            var found = await _templateRepository.DeleteTemplate(request.Id, cancellationToken);
+            if (!found)
+            {
+                throw new KeyNotFoundException($"Template with Id {request.Id} not found.");
+            }
         }
     }
 }

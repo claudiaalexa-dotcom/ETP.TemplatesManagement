@@ -27,21 +27,17 @@ namespace ETP.TemplatesManagement.ServiceHost.Services
         }
 
         [HttpPost("get-by-anchor-point", Name = "GetTemplateByAnchorPoint")]
-        public async Task<IActionResult> GetByAnchorPoint([FromBody] AnchorPoint anchorPoint, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetByAnchorPoint([FromBody] AnchorPointSearchOptions searchOptions, CancellationToken cancellationToken)
         {
-            var template = await mediator.Send(new GetTemplateByAnchorPointQuery() { AnchorPoint = anchorPoint }, cancellationToken);
-            return template != null
-                 ? Ok(template)
-                 : NotFound();
+            var template = await mediator.Send(new GetTemplatesByAnchorPointQuery() { SearchOptions = searchOptions }, cancellationToken);
+            return Ok(template);
         }
 
         [HttpGet("{id}", Name = "GetTemplateById")]
         public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
-        { 
+        {
             var template = await mediator.Send(new GetTemplateByIdQuery() { Id = id }, cancellationToken);
-            return template != null
-                 ? Ok(template)
-                 : NotFound();
+            return Ok(template);
         }
 
         [HttpGet(Name = "GetAllTemplates")]
@@ -64,18 +60,14 @@ namespace ETP.TemplatesManagement.ServiceHost.Services
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] TemplateBase updateTemplate, CancellationToken cancellationToken)
         {
             var updatedTemplate = await mediator.Send(new UpdateTemplateCommand() { Id = id, UpdateTemplate = updateTemplate }, cancellationToken);
-            return updatedTemplate != null
-                 ? Ok(updatedTemplate)
-                 : NotFound();
+            return Ok(updatedTemplate);
         }
 
         [HttpDelete("{id}", Name = "DeleteTemplate")]
         public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
         {
-            var deleted = await mediator.Send(new DeleteTemplateCommand() { Id = id }, cancellationToken);
-            return deleted
-                 ? NoContent()
-                 : NotFound();
+            await mediator.Send(new DeleteTemplateCommand() { Id = id }, cancellationToken);
+            return NoContent();
         }
     }
 }

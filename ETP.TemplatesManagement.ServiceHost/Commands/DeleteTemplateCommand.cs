@@ -2,7 +2,7 @@
 
 namespace ETP.TemplatesManagement.ServiceHost.Commands
 {
-    public class DeleteTemplateCommand : IRequest<bool>
+    public class DeleteTemplateCommand : IRequest
     {
         public Guid Id { get; set; }
     }

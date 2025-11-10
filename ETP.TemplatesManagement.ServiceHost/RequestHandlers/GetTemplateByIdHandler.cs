@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
 {
-    public class GetTemplateByIdHandler: IRequestHandler<GetTemplateByIdQuery, Template?>
+    public class GetTemplateByIdHandler: IRequestHandler<GetTemplateByIdQuery, Template>
     {
         private readonly ITemplateRepository _templateRepository;
         private readonly IMapper mapper;
@@ -17,10 +17,15 @@ namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
             this.mapper = mapper;
         }
 
-        public async Task<Template?> Handle(GetTemplateByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Template> Handle(GetTemplateByIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _templateRepository.GetTemplateById(request.Id, cancellationToken);
-            return mapper.Map<Template?>(result);
+            if (result == null)
+            {
+                throw new KeyNotFoundException($"Template with Id {request.Id} not found.");
+            }
+
+            return mapper.Map<Template>(result);
         }
     }
 }

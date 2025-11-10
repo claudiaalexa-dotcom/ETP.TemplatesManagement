@@ -33,15 +33,50 @@ namespace ETP.TemplatesManagement.RA.Repositories
             return template;
         }
 
-        public async Task<Template?> GetTemplateByAnchorPoint(AnchorPoint anchorPoint, CancellationToken cancellationToken)
+        public async Task<List<Template>> GetTemplatesByAnchorPoint(AnchorPointSearchOptions searchOptions, CancellationToken cancellationToken)
         {
-            var filter = Builders<Template>.Filter.And(
-                Builders<Template>.Filter.Eq(t => t.AnchorPoint.DeliveryOwner.Id, anchorPoint.DeliveryOwner.Id),
-                Builders<Template>.Filter.Eq(t => t.AnchorPoint.ServiceLine.Id, anchorPoint.ServiceLine.Id),
-                Builders<Template>.Filter.Eq(t => t.AnchorPoint.MarketOffering.Id, anchorPoint.MarketOffering.Id)
-            );
+            if (searchOptions == null)
+            {
+                return await collection.Find(Builders<Template>.Filter.Empty).ToListAsync(cancellationToken);
+            }
 
-            return await collection.Find(filter).FirstOrDefaultAsync(cancellationToken);
+            var filters = new List<FilterDefinition<Template>>();
+
+            if (searchOptions.DeliveryOwnerIds != null && searchOptions.DeliveryOwnerIds.Any())
+            {
+                filters.Add(Builders<Template>.Filter.In(t => t.AnchorPoint.DeliveryOwnerId, searchOptions.DeliveryOwnerIds));
+            }
+
+            if (searchOptions.DeliveryOwnerNames != null && searchOptions.DeliveryOwnerNames.Any())
+            {
+                filters.Add(Builders<Template>.Filter.In("AnchorPoint.DeliveryOwnerName", searchOptions.DeliveryOwnerNames));
+            }
+
+            if (searchOptions.ServiceLineIds != null && searchOptions.ServiceLineIds.Any())
+            {
+                filters.Add(Builders<Template>.Filter.In(t => t.AnchorPoint.ServiceLineId, searchOptions.ServiceLineIds));
+            }
+
+            if (searchOptions.ServiceLineNames != null && searchOptions.ServiceLineNames.Any())
+            {
+                filters.Add(Builders<Template>.Filter.In("AnchorPoint.ServiceLineName", searchOptions.ServiceLineNames));
+            }
+
+            if (searchOptions.MarketOfferingIds != null && searchOptions.MarketOfferingIds.Any())
+            {
+                filters.Add(Builders<Template>.Filter.In(t => t.AnchorPoint.MarketOfferingId, searchOptions.MarketOfferingIds));
+            }
+
+            if (searchOptions.MarketOfferingNames != null && searchOptions.MarketOfferingNames.Any())
+            {
+                filters.Add(Builders<Template>.Filter.In("AnchorPoint.MarketOfferingName", searchOptions.MarketOfferingNames));
+            }
+
+            var filter = filters.Count > 0
+                ? Builders<Template>.Filter.And(filters)
+                : Builders<Template>.Filter.Empty;
+
+            return await collection.Find(filter).ToListAsync(cancellationToken);
         }
 
         public async Task<Template?> GetTemplateById(Guid id, CancellationToken cancellationToken)
@@ -77,13 +112,13 @@ namespace ETP.TemplatesManagement.RA.Repositories
             return result.DeletedCount > 0;
         }
 
-        public async Task<List<Template>> GetTemplates(SearchOptions searchObject, CancellationToken cancellationToken)
+        public async Task<List<Template>> GetTemplates(SearchOptions searchOptions, CancellationToken cancellationToken)
         {
             var filter = Builders<Template>.Filter.Empty;
 
-            if (!string.IsNullOrWhiteSpace(searchObject?.SearchTerm))
+            if (!string.IsNullOrWhiteSpace(searchOptions?.SearchTerm))
             {
-                var term = Regex.Escape(searchObject!.SearchTerm!.Trim());
+                var term = Regex.Escape(searchOptions!.SearchTerm!.Trim());
                 var regex = new BsonRegularExpression(term, "i");
 
                 var titleFilter = Builders<Template>.Filter.Regex(t => t.Title, regex);
@@ -106,8 +141,8 @@ namespace ETP.TemplatesManagement.RA.Repositories
             }
 
             // Sorting
-            var sortColumn = (searchObject?.SortColumn ?? "title").Trim().ToLowerInvariant();
-            var sortOrder = (searchObject?.SortOrder ?? "asc").Trim().ToLowerInvariant();
+            var sortColumn = (searchOptions?.SortColumn ?? "title").Trim().ToLowerInvariant();
+            var sortOrder = (searchOptions?.SortOrder ?? "asc").Trim().ToLowerInvariant();
 
             SortDefinition<Template> sort = sortColumn switch
             {
@@ -129,8 +164,8 @@ namespace ETP.TemplatesManagement.RA.Repositories
             };
 
             // Pagination
-            int page = searchObject?.Page ?? 1;
-            int count = searchObject?.Count ?? DefaultPaginationCount;
+            int page = searchOptions?.Page ?? 1;
+            int count = searchOptions?.Count ?? DefaultPaginationCount;
             if (page < 1) page = 1;
             if (count < 1) count = DefaultPaginationCount;
 
