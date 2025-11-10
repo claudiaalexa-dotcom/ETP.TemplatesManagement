@@ -20,8 +20,10 @@ namespace ETP.TemplatesManagement
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<ServiceHost.Filters.GlobalExceptionFilter>();
+            });
 
             // MongoDB configuration (use appsettings or fallbacks)
             var mongoConn = builder.Configuration.GetValue<string>("MongoSettings:ConnectionString") ?? "mongodb://localhost:27017";
