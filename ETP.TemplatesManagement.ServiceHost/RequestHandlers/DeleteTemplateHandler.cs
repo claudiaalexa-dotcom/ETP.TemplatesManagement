@@ -15,7 +15,9 @@ namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
 
         public async Task Handle(DeleteTemplateCommand request, CancellationToken cancellationToken)
         {
-            var found = await _templateRepository.DeleteTemplate(request.Id, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            
+            var found = await _templateRepository.DeleteTemplateAsync(request.Id, cancellationToken);
             if (!found)
             {
                 throw new KeyNotFoundException($"Template with Id {request.Id} not found.");

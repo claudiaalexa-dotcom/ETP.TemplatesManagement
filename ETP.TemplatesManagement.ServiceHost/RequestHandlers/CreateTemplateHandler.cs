@@ -19,8 +19,10 @@ namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
 
         public async Task<Template> Handle(CreateTemplateCommand request, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var model = mapper.Map<Data.Models.Template>(request.Template);
-            var created = await _templateRepository.CreateTemplate(model, cancellationToken);
+            var created = await _templateRepository.CreateTemplateAsync(model, cancellationToken);
             return mapper.Map<Template>(created);
         }
     }

@@ -19,9 +19,11 @@ namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
         }
 
         public async Task<List<Template>> Handle(GetTemplatesQuery request, CancellationToken cancellationToken)
-        {   
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var options = mapper.Map<Data.Models.SearchOptions>(request.SearchObject);
-            var result = await _templateRepository.GetTemplates(options, cancellationToken);
+            var result = await _templateRepository.GetTemplatesAsync(options, cancellationToken);
             return mapper.Map<List<Template>>(result);
         }
     }

@@ -19,10 +19,12 @@ namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
 
         public async Task<Template> Handle(UpdateTemplateCommand request, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var model = mapper.Map<Data.Models.Template>(request.UpdateTemplate);
             model.Id = request.Id;
             
-            var updated = await _templateRepository.UpdateTemplate(model, cancellationToken);
+            var updated = await _templateRepository.UpdateTemplateAsync(model, cancellationToken);
             if (updated == null)
             {
                 throw new KeyNotFoundException($"Template with Id {request.Id} not found.");

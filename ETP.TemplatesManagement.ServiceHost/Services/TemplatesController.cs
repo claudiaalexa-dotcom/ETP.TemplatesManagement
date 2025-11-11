@@ -19,7 +19,7 @@ namespace ETP.TemplatesManagement.ServiceHost.Services
         }
 
         [HttpPost(Name = "CreateTemplate")]
-        public async Task<IActionResult> Create([FromBody] TemplateBase template, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAsync([FromBody] TemplateBase template, CancellationToken cancellationToken)
         {
             var createdTemplate = await mediator.Send(new CreateTemplateCommand() { Template = template }, cancellationToken);
             
@@ -27,21 +27,21 @@ namespace ETP.TemplatesManagement.ServiceHost.Services
         }
 
         [HttpPost("get-by-anchor-point", Name = "GetTemplateByAnchorPoint")]
-        public async Task<IActionResult> GetByAnchorPoint([FromBody] AnchorPointSearchOptions searchOptions, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetByAnchorPointAsync([FromBody] AnchorPointSearchOptions searchOptions, CancellationToken cancellationToken)
         {
             var template = await mediator.Send(new GetTemplatesByAnchorPointQuery() { SearchOptions = searchOptions }, cancellationToken);
             return Ok(template);
         }
 
         [HttpGet("{id}", Name = "GetTemplateById")]
-        public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var template = await mediator.Send(new GetTemplateByIdQuery() { Id = id }, cancellationToken);
             return Ok(template);
         }
 
         [HttpGet(Name = "GetAllTemplates")]
-        public async Task<IActionResult> GetAll([FromQuery] int? page, [FromQuery] int? count, [FromQuery] string? searchTerm, [FromQuery] string? sortColumn, [FromQuery] string? sortOrder, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllAsync([FromQuery] int? page, [FromQuery] int? count, [FromQuery] string? searchTerm, [FromQuery] string? sortColumn, [FromQuery] string? sortOrder, CancellationToken cancellationToken)
         {
             var searchObject = new SearchOptions()
             {
@@ -57,14 +57,14 @@ namespace ETP.TemplatesManagement.ServiceHost.Services
         }
 
         [HttpPut("{id}", Name = "UpdateTemplate")]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] TemplateBase updateTemplate, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] TemplateBase updateTemplate, CancellationToken cancellationToken)
         {
             var updatedTemplate = await mediator.Send(new UpdateTemplateCommand() { Id = id, UpdateTemplate = updateTemplate }, cancellationToken);
             return Ok(updatedTemplate);
         }
 
         [HttpDelete("{id}", Name = "DeleteTemplate")]
-        public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             await mediator.Send(new DeleteTemplateCommand() { Id = id }, cancellationToken);
             return NoContent();
