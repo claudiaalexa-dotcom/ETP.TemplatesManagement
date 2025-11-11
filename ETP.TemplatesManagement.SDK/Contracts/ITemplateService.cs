@@ -4,11 +4,11 @@ namespace ETP.TemplatesManagement.SDK.Contracts
 {
     public interface ITemplateService
     {
-        Task<IActionResult> Create([FromBody] TemplateBase template, CancellationToken cancellationToken);
-        Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken);
-        Task<IActionResult> GetAll([FromQuery] int? page, [FromQuery] int? count, [FromQuery] string? searchTerm, [FromQuery] string? sortColumn, [FromQuery] string? sortOrder, CancellationToken cancellationToken);
-        Task<IActionResult> GetByAnchorPoint([FromBody] AnchorPointSearchOptions searchOptions, CancellationToken cancellationToken);
-        Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken);
-        Task<IActionResult> Update([FromRoute] Guid id, [FromBody] TemplateBase updateTemplate, CancellationToken cancellationToken);
+        Task<IActionResult> CreateAsync([FromBody] TemplateBase template, CancellationToken cancellationToken);
+        Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken cancellationToken);
+        Task<IActionResult> GetAllAsync([FromQuery] int? page, [FromQuery] int? count, [FromQuery] string? searchTerm, [FromQuery] string? sortColumn, [FromQuery] string? sortOrder, CancellationToken cancellationToken);
+        Task<IActionResult> GetByAnchorPointAsync([FromBody] AnchorPointSearchOptions searchOptions, CancellationToken cancellationToken);
+        Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken);
+        Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] TemplateBase updateTemplate, CancellationToken cancellationToken);
     }
 }

@@ -18,7 +18,7 @@ namespace ETP.TemplatesManagement.RA.Repositories
             this.collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
 
-        public async Task<Template> CreateTemplate(Template templateBase, CancellationToken cancellationToken)
+        public async Task<Template> CreateTemplateAsync(Template templateBase, CancellationToken cancellationToken)
         {
             var template = new Template
             {
@@ -33,7 +33,7 @@ namespace ETP.TemplatesManagement.RA.Repositories
             return template;
         }
 
-        public async Task<List<Template>> GetTemplatesByAnchorPoint(AnchorPointSearchOptions searchOptions, CancellationToken cancellationToken)
+        public async Task<List<Template>> GetTemplatesByAnchorPointAsync(AnchorPointSearchOptions searchOptions, CancellationToken cancellationToken)
         {
             if (searchOptions == null)
             {
@@ -79,15 +79,15 @@ namespace ETP.TemplatesManagement.RA.Repositories
             return await collection.Find(filter).ToListAsync(cancellationToken);
         }
 
-        public async Task<Template?> GetTemplateById(Guid id, CancellationToken cancellationToken)
+        public async Task<Template?> GetTemplateByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var filter = Builders<Template>.Filter.Eq(t => t.Id, id);
             return await collection.Find(filter).FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<Template?> UpdateTemplate(Template updateTemplate, CancellationToken cancellationToken)
+        public async Task<Template?> UpdateTemplateAsync(Template updateTemplate, CancellationToken cancellationToken)
         {
-            var template = GetTemplateById(updateTemplate.Id, cancellationToken);
+            var template = GetTemplateByIdAsync(updateTemplate.Id, cancellationToken);
             if (template == null)
             {
                 return null;
@@ -105,14 +105,14 @@ namespace ETP.TemplatesManagement.RA.Repositories
             return await collection.FindOneAndReplaceAsync(filter, updateTemplate, options, cancellationToken);
         }
 
-        public async Task<bool> DeleteTemplate(Guid id, CancellationToken cancellationToken)
+        public async Task<bool> DeleteTemplateAsync(Guid id, CancellationToken cancellationToken)
         {
             var filter = Builders<Template>.Filter.Eq(t => t.Id, id);
             var result = await collection.DeleteOneAsync(filter, cancellationToken);
             return result.DeletedCount > 0;
         }
 
-        public async Task<List<Template>> GetTemplates(SearchOptions searchOptions, CancellationToken cancellationToken)
+        public async Task<List<Template>> GetTemplatesAsync(SearchOptions searchOptions, CancellationToken cancellationToken)
         {
             var filter = Builders<Template>.Filter.Empty;
 

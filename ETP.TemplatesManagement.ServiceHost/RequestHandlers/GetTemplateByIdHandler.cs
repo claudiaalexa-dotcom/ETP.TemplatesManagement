@@ -19,7 +19,9 @@ namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
 
         public async Task<Template> Handle(GetTemplateByIdQuery request, CancellationToken cancellationToken)
         {
-            var result = await _templateRepository.GetTemplateById(request.Id, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = await _templateRepository.GetTemplateByIdAsync(request.Id, cancellationToken);
             if (result == null)
             {
                 throw new KeyNotFoundException($"Template with Id {request.Id} not found.");

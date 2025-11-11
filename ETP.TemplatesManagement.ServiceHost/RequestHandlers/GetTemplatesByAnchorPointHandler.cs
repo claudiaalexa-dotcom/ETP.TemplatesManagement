@@ -19,8 +19,10 @@ namespace ETP.TemplatesManagement.ServiceHost.RequestHandlers
 
         public async Task<List<Template>> Handle(GetTemplatesByAnchorPointQuery request, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var model = mapper.Map<Data.Models.AnchorPointSearchOptions>(request.SearchOptions);
-            var result = await _templateRepository.GetTemplatesByAnchorPoint(model, cancellationToken);
+            var result = await _templateRepository.GetTemplatesByAnchorPointAsync(model, cancellationToken);
             
             return mapper.Map<List<Template>>(result);
         }
